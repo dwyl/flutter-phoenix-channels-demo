@@ -1,16 +1,45 @@
-# app
+# `Flutter` application
 
-A new Flutter project.
+Welcome to the `Flutter` client app!
 
-## Getting Started
+This app will *connect*
+to a `Phoenix` server.
+You need to run it first
+in the [`./backend`](../backend/)
+folder.
 
-This project is a starting point for a Flutter application.
+# Pre-requisites 📝
 
-A few resources to get you started if this is your first Flutter project:
+To run Flutter,
+whether it's on a real device
+or on an emulator,
+you need to have the 
+**`Flutter SDK`** installed, 
+along with `XCode`
+and `Android Studio`.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+This process can take some time.
+Therefore, we've already created a guide for you
+to help you get through it
+and start "fluttering" 🦋
+ASAP!
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+https://github.com/dwyl/learn-flutter#install-%EF%B8%8F
+
+
+# Run it! 🏃‍♂️
+
+If you want to run 
+this project on an emulator,
+follow the steps found in
+https://github.com/dwyl/learn-flutter#0-setting-up-a-new-project.
+
+If you are keen on running this
+on your own device,
+please visit
+https://github.com/dwyl/flutter-stopwatch-tutorial/tree/33907b1b01760dd49db85fa97fb84ce4562252ae#giving-it-a-whirl-.
+
+If you've followed the steps correctly
+for your own device or emulator,
+you should have the `Flutter` app
+properly running!

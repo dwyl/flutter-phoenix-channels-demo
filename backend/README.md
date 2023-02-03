@@ -1,18 +1,25 @@
-# App
+# `Phoenix` Backend
 
-To start your Phoenix server:
+Welcome to the `Phoenix` backend server!
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+# Pre-requisites 📝
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+To run this backend, 
+you need to install:
+- [`Elixir`](https://elixir-lang.org/install.html)
+- [`Phoenix Framework`](https://hexdocs.pm/phoenix/installation.html)
 
-## Learn more
+Click on each link to find out 
+how to install both of these
+so you can run this backend locally!
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+# Run it! 🏃‍♂️
+
+If this is your first time using it,
+follow the next two steps.
+
+  * Run `mix setup` to install and setup dependencies.
+  * Start Phoenix endpoint with `mix phx.server`.
+
+Your backend should be up and running!

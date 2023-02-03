@@ -86,6 +86,33 @@ Therefore,
 we recommend giving `learn` repositories
 above a read before diving into this demo.
 
+Throughout this tutorial,
+you will be basically developing
+both the **frontend** and the **backend**.
+We *recommend* having separate terminal windows
+(or Visual Studio windows)
+for each one, 
+as you will be running 
+the `Phoenix` backend on one
+and the `Flutter` client app
+on the other.
+
+## I want to run this project! 🏃‍♂️
+
+You might have noticed we have two folders:
+- [`app`](./app/), 
+pertaining to the `Flutter` application.
+- [`backend`](./backend/),
+pertaining to the `Phoenix` server
+that the client `Flutter` app will connect to.
+
+We recommend you opening *two* 
+different terminal windows
+(one for each folder)
+and follow the instructions
+inside each one to run this project
+and see it in action!
+
 ## 0. Creating basic `Flutter` app
 
 In this section, 
