@@ -171,3 +171,69 @@ enter `Y` to download and install them.
 After installing,
 simply run `mix phx.server`,
 and you should see your server running!
+
+## 1. Creating a room in `Phoenix`
+
+Let's start by creating a 
+channel/room for users to join
+in the backend.
+
+For this, 
+inside the `backend` directory,
+where your `Phoenix` project resides,
+stop the server (in case you are running it)
+and run:
+
+```elixir
+mix phx.gen.channel Room
+```
+
+Your terminal should yield the following output.
+
+```sh
+* creating lib/app_web/channels/room_channel.ex
+* creating test/app_web/channels/room_channel_test.exs
+* creating test/support/channel_case.ex
+
+The default socket handler - AppWeb.UserSocket - was not found.
+Do you want to create it? [Yn]
+```
+
+Type `Y` and press `Enter`.
+This will create a **user socket handler** for us.
+The terminal should now state:
+
+```sh
+* creating lib/app_web/channels/user_socket.ex
+* creating assets/js/user_socket.js
+
+Add the socket handler to your `lib/app_web/endpoint.ex`, for example:
+
+    socket "/socket", AppWeb.UserSocket,
+      websocket: true,
+      longpoll: false
+
+For the front-end integration, you need to import the `user_socket.js`
+in your `assets/js/app.js` file:
+
+    import "./user_socket.js"
+```
+
+Let's follow the first instructions
+and add the snippet of code to `endpoint.ex`.
+Open `lib/app_web/endpoint.ex` and add:
+
+```elixir
+    socket "/socket", AppWeb.UserSocket,
+      websocket: true,
+      longpoll: false
+```
+
+And we're done! 🎉
+We've successfully created a 
+channel/room that users can join in.
+We will be able to do whatever we want
+and handle different events
+inside `lib/app_web/channels/room_channel.ex`
+that we've just now created. 
+
