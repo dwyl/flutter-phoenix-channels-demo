@@ -85,3 +85,89 @@ and the `Phoenix` server.
 Therefore, 
 we recommend giving `learn` repositories
 above a read before diving into this demo.
+
+## 0. Creating basic `Flutter` app
+
+In this section, 
+we will be creating 
+both the **client** (`Flutter`)
+and the **backend** (`Phoenix`).
+
+### 0.1 Creating new `Flutter` app
+
+In the directory of your project,
+create a new directory called `app`.
+This is where the `Flutter` app will reside in.
+
+```sh
+mkdir app
+cd app
+```
+
+We are going to start this from scratch.
+To create a new `Flutter` project
+with Visual Studio,
+please follow the instructions
+in 
+https://github.com/dwyl/learn-flutter#0-setting-up-a-new-project.
+
+After creating all the files
+and running `flutter pub get`
+to fetch all the dependencies,
+we are ready to run the app
+to test it.
+
+Again, if you check the link above
+to start up an emulator 
+and run the application.
+
+If you want to run the app
+on a real device,
+check 
+https://github.com/dwyl/flutter-stopwatch-tutorial/tree/33907b1b01760dd49db85fa97fb84ce4562252ae#running-on-a-real-device
+to get started.
+
+You should now have a 
+simple working counter app.
+
+![starter_app](https://user-images.githubusercontent.com/17494745/200814531-31579684-e6ec-4da4-a504-642eb31fedb9.png)
+
+### 0.2 Creating new `Phoenix` server
+
+Let's now create a brand new `Phoenix`
+server so our `Flutter` app can connect.
+In the project root, 
+create a new folder called `backend`
+and enter it.
+
+So:
+
+```sh
+cd ..
+mkdir backend
+cd backend
+```
+
+In here, 
+run the following command 
+to bootstrap a new `Phoenix` project.
+
+```sh
+mix phx.new . --app app --no-ecto --no-html --no-gettext --no-dashboard --no-mailer
+```
+
+> We are creating a `Phoenix` server
+> without any views, dashboards, mail services
+> or databases.
+> We want a simple, lightweight server
+> to create 
+> [channels](https://hexdocs.pm/phoenix/channels.html)
+> where users will join and leave.
+
+After executing this command,
+when prompted to install the dependencies,
+enter `Y` to download and install them.
+
+After installing,
+simply run `mix phx.server`,
+and you should see your server running!
