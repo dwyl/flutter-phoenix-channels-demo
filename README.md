@@ -264,3 +264,146 @@ and handle different events
 inside `lib/app_web/channels/room_channel.ex`
 that we've just now created. 
 
+## 2. Setting up `Flutter` page
+
+Let's go back to `Flutter`.
+
+As it stands, 
+we don't want a *counter app*.
+We want a simple page
+allowing the user to connect
+to the room 
+and see who's also online.
+
+We want the user to type a username,
+connect 
+and see the current users.
+
+Let's create a screen for this.
+Inside `lib/main.dart`,
+locate `_MyHomePageState` class
+change it so it looks like the following.
+
+```dart
+class _MyHomePageState extends State<MyHomePage> {
+  bool connected = false;
+  String _username = "";
+
+  onButtonPress() {
+    if (_username.isNotEmpty) {
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            child: Padding(
+                padding: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                        child: TextFormField(
+                      onChanged: (value) => setState(() {
+                        _username = value;
+                      }),
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: 'Enter your username',
+                      ),
+                    )),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: ElevatedButton(
+                        onPressed: _username.isEmpty ? null : onButtonPress,
+                        child: const Text('Connect'),
+                      ),
+                    )
+                  ],
+                )),
+          ),
+          Padding(
+              padding: const EdgeInsets.only(bottom: 32),
+              child: connected
+                  ? const Text(
+                      'Connected',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(238, 56, 231, 94)),
+                    )
+                  : const Text(
+                      'Disconnected',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(239, 255, 48, 48)),
+                    )),
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  height: 50,
+                  color: Colors.amber[600],
+                  child: const Center(child: Text('Entry A')),
+                ),
+                Container(
+                  height: 50,
+                  color: Colors.amber[500],
+                  child: const Center(child: Text('Entry B')),
+                ),
+                Container(
+                  height: 50,
+                  color: Colors.amber[100],
+                  child: const Center(child: Text('Entry C')),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+Additionally, 
+locate the `MyApp` class
+and change the title, like so.
+
+```dart
+      home: const MyHomePage(title: 'Who\'s online?'),
+```
+
+We've created a simple page
+with a `ListView`
+that will show the list of users 
+connected.
+For now, 
+we are just adding `Container`s
+with sample data.
+
+The button to connect
+should be disabled
+if the username is empty.
+
+Connection status is shown 
+with a `Textfield` 
+informing the user if he/she is connected or not.
+
+Both the `username` and `connection` status
+are part of the state of the page,
+which will dynamically change
+according to the user actions
+(changing the username
+and connection to the Phoenix
+channel, respectively).
+
+When the button is pressed,
+the `onButtonPress()` callback function
+is called.
+For now, it doesn't do anything.
+But will later connect to the Phoenix server.
