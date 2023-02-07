@@ -1,6 +1,3 @@
-# flutter-phoenix-channels-demo
-A quick demo app showcasing communication between a Flutter Native App and a Phoenix Backend.
-
 <div align="center">
 
 #  `Flutter` + `Phoenix` Demo
@@ -55,7 +52,7 @@ To learn more about Phoenix and Elixir,
 we suggest visiting
 [`dwyl/learn-phoenix-framework`](https://github.com/dwyl/learn-phoenix-framework)
 and
-[`dwyl/learn-elixir`](https://github.com/dwyl/learn-elixir)
+[`dwyl/learn-elixir`](https://github.com/dwyl/learn-elixir).
 
 We will create a simple Flutter app
 that will connect to a Phoenix-based backend server
@@ -83,8 +80,8 @@ of communication between the app
 and the `Phoenix` server.
 
 Therefore, 
-we recommend giving `learn` repositories
-above a read before diving into this demo.
+we recommend giving the `learn` repositories
+linked above a read before diving into this demo.
 
 Throughout this tutorial,
 you will be basically developing
@@ -136,7 +133,9 @@ To create a new `Flutter` project
 with Visual Studio,
 please follow the instructions
 in 
-https://github.com/dwyl/learn-flutter#0-setting-up-a-new-project.
+https://github.com/dwyl/learn-flutter#0-setting-up-a-new-project
+(you only need to read the 
+**0. Setting up a new project** section).
 
 After creating all the files
 and running `flutter pub get`
@@ -144,15 +143,17 @@ to fetch all the dependencies,
 we are ready to run the app
 to test it.
 
-Again, if you check the link above
-to start up an emulator 
-and run the application.
+To start the application 
+on an emulator,
+please visit the link above,.
 
-If you want to run the app
+On the other hand,
+ff you want to run the app
 on a real device,
 check 
 https://github.com/dwyl/flutter-stopwatch-tutorial/tree/33907b1b01760dd49db85fa97fb84ce4562252ae#running-on-a-real-device
-to get started.
+to get started
+and read the **Running on a real device** section.
 
 You should now have a 
 simple working counter app.
@@ -162,12 +163,10 @@ simple working counter app.
 ### 0.2 Creating new `Phoenix` server
 
 Let's now create a brand new `Phoenix`
-server so our `Flutter` app can connect.
+server so our `Flutter` app can connect to.
 In the project root, 
 create a new folder called `backend`
 and enter it.
-
-So:
 
 ```sh
 cd ..
@@ -201,9 +200,9 @@ and you should see your server running!
 
 ## 1. Creating a room in `Phoenix`
 
-Let's start by creating a 
-channel/room for users to join
-in the backend.
+In `Phoenix`,
+let's start by creating a 
+channel/room for users to join in.
 
 For this, 
 inside the `backend` directory,
@@ -458,7 +457,7 @@ Next, let's add a new
 to the the supervision tree
 in `lib/app/application.ex`.
 
-> :note: It **must** be added *after*
+> **Warning** It **must** be added *after*
 > the `PubSub` child and *before* the endpoint.
 
 ```elixir
@@ -488,8 +487,8 @@ to show in the `Flutter` client.
 
 One of these is the **`user_id`**.
 For this, we will use 
-[`UUID`](https://hexdocs.pm/uuid/readme.html)
-to generate unique 
+[`UUID`](https://hexdocs.pm/uuid/readme.html),
+a library that generates unique 
 [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier).
 
 To install it,
@@ -763,7 +762,7 @@ import 'package:phoenix_socket/phoenix_socket.dart';
 We want the user to connect
 to the channel after pressing the button.
 The user **must have an username**
-to connect
+to connect to the server.
 
 Hence why the button is only enabled
 whenever the `_username` field
@@ -869,7 +868,7 @@ of the given channel.
 - `responses`, a list of users currently connected
 to the channel.
 The reason it's named `responses` instead of `users`
-is so you know it's a diff response from the presence server
+is so you know it's a `diff` response from the presence server
 that is *parsed* into a list of connected users.
 
 This function first verifies

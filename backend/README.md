@@ -22,4 +22,5 @@ follow the next two steps.
   * Run `mix setup` to install and setup dependencies.
   * Start Phoenix endpoint with `mix phx.server`.
 
-Your backend should be up and running!
+Your backend should be up and running
+on `localhost:4000`!
