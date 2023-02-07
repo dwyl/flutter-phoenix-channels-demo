@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phoenix_socket/phoenix_socket.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,14 +31,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool connected = false;
+  bool _connected = false;
   String _username = "";
+  late PhoenixSocket _socket;
+  late PhoenixChannel _channel;
+  late PhoenixPresence _presence;
+
+  var _responses = [];
 
   onButtonPress() {
-    if (_username.isNotEmpty) {
+    // If the user is not connected, create the socket and configure it
+
+    if (!_connected) {
+      // Connect socket and adding event handlers
+      _socket = PhoenixSocket('ws://localhost:4000/socket/websocket')..connect();
+
+      // If stream is closed
+      _socket.closeStream.listen((event) {
+        _socket.close();
+        setState(() => _connected = false);
+      });
+
+      // If stream is open, join channel with username as param
+      _socket.openStream.listen((event) {
+        setState(() {
+          _channel = _socket.addChannel(topic: 'room:lobby', parameters: {"username": _username})..join(const Duration(seconds: 1));
+          _connected = true;
+        });
+
+        _presence = PhoenixPresence(channel: _channel);
+        // https://hexdocs.pm/phoenix/presence.html#the-presence-generator
+        // listens to `presence_state` and `presence_diff`
+        // events that go through `onSync` callback, forcing re-render
+        _presence.onSync = () {
+          var updatedResponses = _presence.list(_presence.state, (String id, Presence presence) {
+            final metaObj = presence.metas.first.data;
+            return {"user_id": id, "username": metaObj["username"]};
+          });
+
+          setState(() {
+            _responses = updatedResponses;
+          });
+        };
+      });
     } else {
-      return null;
+      _socket.close();
+      setState(() {
+        _responses = [];
+      });
     }
+  }
+
+  @override
+  void dispose() {
+    _presence.dispose();
+    _channel.close();
+    _socket.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,35 +99,35 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Container(
-            child: Padding(
-                padding: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                        child: TextFormField(
-                      onChanged: (value) => setState(() {
-                        _username = value;
-                      }),
-                      decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        labelText: 'Enter your username',
-                      ),
-                    )),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: ElevatedButton(
-                        onPressed: _username.isEmpty ? null : onButtonPress,
-                        child: const Text('Connect'),
-                      ),
-                    )
-                  ],
-                )),
-          ),
+          Padding(
+              padding: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                      child: TextFormField(
+                    onChanged: (value) => setState(() {
+                      _username = value;
+                    }),
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Enter your username',
+                    ),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: _connected ? const Color.fromARGB(255, 215, 75, 75) : const Color.fromARGB(255, 95, 143, 77)),
+                      onPressed: _username.isEmpty ? null : onButtonPress,
+                      child: _connected ? const Text('Disconnect') : const Text('Connect'),
+                    ),
+                  )
+                ],
+              )),
           Padding(
               padding: const EdgeInsets.only(bottom: 32),
-              child: connected
+              child: _connected
                   ? const Text(
                       'Connected',
                       style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(238, 56, 231, 94)),
@@ -87,26 +137,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(239, 255, 48, 48)),
                     )),
           Expanded(
-            child: ListView(
-              children: <Widget>[
-                Container(
-                  height: 50,
-                  color: Colors.amber[600],
-                  child: const Center(child: Text('Entry A')),
-                ),
-                Container(
-                  height: 50,
-                  color: Colors.amber[500],
-                  child: const Center(child: Text('Entry B')),
-                ),
-                Container(
-                  height: 50,
-                  color: Colors.amber[100],
-                  child: const Center(child: Text('Entry C')),
-                ),
-              ],
-            ),
-          ),
+              child: ListView.separated(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: _responses.length,
+                  separatorBuilder: (BuildContext context, int index) => const Divider(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      height: 50,
+                      child: Center(child: Text(_responses[index]["username"])),
+                    );
+                  })),
         ],
       ),
     );

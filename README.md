@@ -407,3 +407,7 @@ the `onButtonPress()` callback function
 is called.
 For now, it doesn't do anything.
 But will later connect to the Phoenix server.
+
+The app should have the following layout.
+
+![basic_layout](https://user-images.githubusercontent.com/17494745/217049291-d5ccbe95-16e9-4f83-b2fe-c930b6cee9a8.png)
