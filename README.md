@@ -568,3 +568,430 @@ to our `Phoenix` server
 and communicate with it!
 
 ## 4. Connect `Flutter` to `Phoenix`
+
+Let's finish this.
+
+To communicate with our `Phoenix` app,
+we need to install a library 
+called 
+[`phoenix_socket`](https://pub.dev/packages/phoenix_socket).
+To install it, add the following line
+to `pubspec.yaml`
+in the `dependencies` section.
+
+```yaml
+phoenix_socket: ^0.6.2
+```
+
+And run `flutter pub get`
+to fetch the dependency.
+
+Then, head over to `app/lib/main.dart`
+and change it to the following code.
+Don't worry, 
+we'll explain each step.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:phoenix_socket/phoenix_socket.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Who\'s online?'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool _connected = false;
+  String _username = "";
+  late PhoenixSocket _socket;
+  late PhoenixChannel _channel;
+  late PhoenixPresence _presence;
+
+  var _responses = [];
+
+  onButtonPress() {
+    // If the user is not connected, create the socket and configure it
+
+    if (!_connected) {
+      // Connect socket and adding event handlers
+      _socket = PhoenixSocket('ws://localhost:4000/socket/websocket')..connect();
+
+      // If stream is closed
+      _socket.closeStream.listen((event) {
+        _socket.close();
+        setState(() => _connected = false);
+      });
+
+      // If stream is open, join channel with username as param
+      _socket.openStream.listen((event) {
+        setState(() {
+          _channel = _socket.addChannel(topic: 'room:lobby', parameters: {"username": _username})..join(const Duration(seconds: 1));
+          _connected = true;
+        });
+
+        _presence = PhoenixPresence(channel: _channel);
+        // https://hexdocs.pm/phoenix/presence.html#the-presence-generator
+        // listens to `presence_state` and `presence_diff`
+        // events that go through `onSync` callback, forcing re-render
+        _presence.onSync = () {
+          var updatedResponses = _presence.list(_presence.state, (String id, Presence presence) {
+            final metaObj = presence.metas.first.data;
+            return {"user_id": id, "username": metaObj["username"]};
+          });
+
+          setState(() {
+            _responses = updatedResponses;
+          });
+        };
+      });
+    } else {
+      _socket.close();
+      setState(() {
+        _responses = [];
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _presence.dispose();
+    _channel.close();
+    _socket.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                      child: TextFormField(
+                    enabled: !_connected,
+                    onChanged: (value) => setState(() {
+                      _username = value;
+                    }),
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Enter your username',
+                    ),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: _connected ? const Color.fromARGB(255, 215, 75, 75) : const Color.fromARGB(255, 95, 143, 77)),
+                      onPressed: _username.isEmpty ? null : onButtonPress,
+                      child: _connected ? const Text('Disconnect') : const Text('Connect'),
+                    ),
+                  )
+                ],
+              )),
+          Padding(
+              padding: const EdgeInsets.only(bottom: 32),
+              child: _connected
+                  ? const Text(
+                      'Connected',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(238, 56, 231, 94)),
+                    )
+                  : const Text(
+                      'Disconnected',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(239, 255, 48, 48)),
+                    )),
+          Expanded(
+              child: ListView.separated(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: _responses.length,
+                  separatorBuilder: (BuildContext context, int index) => const Divider(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      height: 50,
+                      child: Center(child: Text(_responses[index]["username"])),
+                    );
+                  })),
+        ],
+      ),
+    );
+  }
+}
+```
+
+e.g
+[`app/lib/main.dart`](https://github.com/dwyl/flutter-phoenix-channels-demo/pull/2/commits/fa7eeb32f0c261fb53c729199b13ecfdb1ef3628#diff-43a41aed8f4bf51ecb85660250a9e01f6b783178ba5d5317606bda12467ddb82)
+
+### 4.1 `_connected_` and `_username` fields
+
+We import the package like so.
+
+```dart
+import 'package:phoenix_socket/phoenix_socket.dart';
+```
+
+We want the user to connect
+to the channel after pressing the button.
+The user **must have an username**
+to connect
+
+Hence why the button is only enabled
+whenever the `_username` field
+(which is managed by `TextField`)
+is not empty.
+
+Therefore, we have two fields
+`_connected` and `_username`
+that change according 
+to the status of the connection
+and as the user is typing in the `Textfield`,
+respectively.
+
+```dart
+Padding(
+    padding: const EdgeInsets.only(bottom: 32, left: 16, right: 16),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+            child: TextFormField(
+          onChanged: (value) => setState(() {
+            _username = value;                // changing the value in each keystroke
+          }),
+          decoration: const InputDecoration(
+            border: UnderlineInputBorder(),
+            labelText: 'Enter your username',
+          ),
+        )),
+        Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: _connected ? const Color.fromARGB(255, 215, 75, 75) : const Color.fromARGB(255, 95, 143, 77)),
+            onPressed: _username.isEmpty ? null : onButtonPress,        // disable according to status connection
+            child: _connected ? const Text('Disconnect') : const Text('Connect'),         // change text according to the connection status
+          ),
+        )
+      ],
+    )),
+```
+
+### 4.2 Connecting to `Phoenix` server when pressing the button
+
+The `onButtonPress` function,
+as the name entails,
+implements the logic of connecting
+`Flutter` to our `Phoenix` server
+whenever the user presses the button.
+
+```dart
+  onButtonPress() {
+    // If the user is not connected, create the socket and configure it
+
+    if (!_connected) {
+      // Connect socket and adding event handlers
+      _socket = PhoenixSocket('ws://localhost:4000/socket/websocket')..connect();
+
+      // If stream is closed
+      _socket.closeStream.listen((event) {
+        _socket.close();
+        setState(() => _connected = false);
+      });
+
+      // If stream is open, join channel with username as param
+      _socket.openStream.listen((event) {
+        setState(() {
+          _channel = _socket.addChannel(topic: 'room:lobby', parameters: {"username": _username})..join(const Duration(seconds: 1));
+          _connected = true;
+        });
+
+        _presence = PhoenixPresence(channel: _channel);
+        // https://hexdocs.pm/phoenix/presence.html#the-presence-generator
+        // listens to `presence_state` and `presence_diff`
+        // events that go through `onSync` callback, forcing re-render
+        _presence.onSync = () {
+          var updatedResponses = _presence.list(_presence.state, (String id, Presence presence) {
+            final metaObj = presence.metas.first.data;
+            return {"user_id": id, "username": metaObj["username"]};
+          });
+
+          setState(() {
+            _responses = updatedResponses;
+          });
+        };
+      });
+    } else {
+      _socket.close();
+      setState(() {
+        _responses = [];
+      });
+    }
+  }
+
+```
+
+In this function 
+we initialize four fields:
+- `_socket`, pertaining to the socket connection.
+- `_channel`, pertaining to the channel the user is joining.
+- `_presence`, an object with the `Presence` information
+of the given channel.
+- `responses`, a list of users currently connected
+to the channel.
+The reason it's named `responses` instead of `users`
+is so you know it's a diff response from the presence server
+that is *parsed* into a list of connected users.
+
+This function first verifies
+if the user is already connected or not.
+If he/she is, 
+it means the user wants to disconnect
+and we close the socket connection
+and reset the `responses` user array to an empty array.
+
+On the other hand,
+if it's not connected,
+we try to do so.
+
+We first connect the socket
+to the `ws://localhost:4000/socket/websocket` URL
+(this assumes you are running the `Phoenix` server on `localhost`)
+and add the handlers
+for both *open* and *closed* connection.
+
+- If the stream is **closed**,
+we close the socket connection
+and set `_connected` to `false`
+to show the appropriate feedback.
+- Otherwise, if the stream is **open**,
+it means the user is **connected**.
+We join the channel
+and send the `_username` as parameters
+to the `Phoenix` server.
+Additionally, 
+we add an `onSync` callback
+to *receive presence information*
+whenever there are any "leave" or "join" events
+to the channel. 
+We use this information to update the list
+of connected users that is shown on the app.
+
+### 4.3 Listing the users
+
+All there's left is to show the username
+of the users that are connected to the `Phoenix` server.
+
+We currently have placeholder items.
+Let's change it to show 
+the contents of `_responses`.
+
+Inside the `build` function 
+of `_MyHomePageState`,
+locate the `Expanded` widget
+and replace it with the following.
+
+```dart
+Expanded(
+  child: ListView.separated(
+      padding: const EdgeInsets.all(8),
+      itemCount: _responses.length,
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      itemBuilder: (BuildContext context, int index) {
+        return SizedBox(
+          height: 50,
+          child: Center(child: Text(_responses[index]["username"])),
+        );
+      })),
+```
+
+We are simply iterating over 
+`_responses` 
+and creating a `SizedBox` 
+with a fixed height
+with the username of the connected user.
+
+As seen earlier, 
+`_connected` is updated
+everytime there is an update
+on the presence info from the `Phoenix` server.
+So we know the list properly shows
+the connected users efficiently and correctly.
+
+## 5. Run the app! 
+
+Checking if everything is properly working
+is best done with two different emulators/devices.
+Choose the device in Visual Studio Code
+and click on `Run > Start debugging`.
+Do this for *two different devices*,
+so we emulate two different users connecting to the server.
+
+In the gif below,
+we are checking a *Chrome* page and *iOS* device.
+
+![final](https://user-images.githubusercontent.com/17494745/217349562-61d84244-67cf-49f0-a77b-373b10520858.gif)
+
+Awesome! 🎉
+
+We now have two devices
+communicating with our `Phoenix` server
+**in real-time**.
+
+We've gone over using the `Presence`
+module on both `Phoenix` and `Flutter`.
+But you don't need to if you just want to 
+exchange simple messages 
+or just want to push simple messages to the socket!
+
+As you can see, 
+it is *easy* to get a real-time app working in `Flutter`!
+
+# Star the Project ⭐
+
+If you've enjoyed this tutorial,
+you can help us by giving us a star!
+
+The more people star and share the project, 
+the more possible contributors are able to understand 
+the value of contributing and open sourcing their knowledge!
+
+As always, if you have any questions
+or find yourself stuck,
+don't hesistate 
+and open an
+[issue](https://github.com/dwyl/flutter-phoenix-channels-demo/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)!
+We'll try our best to help you!
+
+
+
+

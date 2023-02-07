@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:phoenix_socket/phoenix_socket.dart';
 
+const socketURL = "ws://localhost:4000/socket/websocket";
+const channelName = "room:lobby";
+
 void main() {
   runApp(const MyApp());
 }
@@ -44,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!_connected) {
       // Connect socket and adding event handlers
-      _socket = PhoenixSocket('ws://localhost:4000/socket/websocket')..connect();
+      _socket = PhoenixSocket(socketURL)..connect();
 
       // If stream is closed
       _socket.closeStream.listen((event) {
@@ -55,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // If stream is open, join channel with username as param
       _socket.openStream.listen((event) {
         setState(() {
-          _channel = _socket.addChannel(topic: 'room:lobby', parameters: {"username": _username})..join(const Duration(seconds: 1));
+          _channel = _socket.addChannel(topic: channelName, parameters: {"username": _username})..join(const Duration(seconds: 1));
           _connected = true;
         });
 
