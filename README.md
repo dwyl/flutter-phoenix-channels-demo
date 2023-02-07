@@ -411,3 +411,160 @@ But will later connect to the Phoenix server.
 The app should have the following layout.
 
 ![basic_layout](https://user-images.githubusercontent.com/17494745/217049291-d5ccbe95-16e9-4f83-b2fe-c930b6cee9a8.png)
+
+## 3. Tracking users in `Phoenix` server
+
+As it stands, `Phoenix`
+doesn't really have a way of knowing 
+*which* and *how many* users/processes
+are connected to the channel.
+
+Tracking these processes is necessary
+to know *who is online*
+so we can display the username to the user in `Flutter`.
+
+Luckily for us, `Phoenix`
+has a module called 
+[**`Presence`**](https://hexdocs.pm/phoenix/Phoenix.Presence.html)
+that makes is easy to track processes and channels.
+
+This behaviour module makes it possible
+to handle differences of "join" and "leave" events
+*in real-time*.
+
+Let's add `Presence` to our `Phoenix` server.
+Create a file called `presence.ex`
+in `lib/app_web`
+and paste the following code.
+
+```elixir
+defmodule AppWeb.Presence do
+  use Phoenix.Presence,
+    otp_app: :app,
+    pubsub_server: App.PubSub
+end
+```
+
+We are defining a presence module
+within our application
+and providing the `:otp_app`
+with the `:app` configuration
+that is defined in `mix.exs`,
+as well as `pubsub_server`,
+which exists by default in `Phoenix` applications.
+
+Next, let's add a new 
+[**supervisor**](https://elixir-lang.org/getting-started/mix-otp/supervisor-and-application.html#our-first-supervisor)
+to the the supervision tree
+in `lib/app/application.ex`.
+
+> :note: It **must** be added *after*
+> the `PubSub` child and *before* the endpoint.
+
+```elixir
+    children = [
+    # Start the Telemetry supervisor
+    AppWeb.Telemetry,
+    # Start the PubSub system
+    {Phoenix.PubSub, name: App.PubSub},
+    # Start the Endpoint (http/https)
+    AppWeb.Presence,
+    AppWeb.Endpoint
+    # Start a worker by calling: App.Worker.start_link(arg)
+    # {App.Worker, arg}
+  ]
+```
+
+And that's it!
+We've just *configured* `Presence`.
+Now it's time to *use it*!
+
+### 3.1 Tracking users 
+
+For each process 
+we are going to be tracking with `Presence`, 
+we want to add **metadata** 
+to show in the `Flutter` client.
+
+One of these is the **`user_id`**.
+For this, we will use 
+[`UUID`](https://hexdocs.pm/uuid/readme.html)
+to generate unique 
+[UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier).
+
+To install it,
+add the following line 
+in the `deps` section in `mix.exs`.
+
+```elixir
+{:uuid, "~> 1.1" }
+```
+
+And run `mix deps.get` to fetch the dependencies.
+
+After installing this,
+change `lib/app_web/channels/room_channel.ex`
+to the following code.
+
+```elixir
+defmodule AppWeb.RoomChannel do
+  use AppWeb, :channel
+  alias AppWeb.Presence
+
+  @impl true
+  def join("room:lobby", payload, socket) do
+    username = Map.get(payload, "username", "")
+    user_id = UUID.uuid1()
+
+    send(self(), :after_join)
+    {:ok, assign(socket, %{username: username, user_id: user_id})}
+  end
+
+  @impl true
+  def handle_info(:after_join, socket) do
+    {:ok, _} = Presence.track(socket, socket.assigns.user_id, %{
+      username: socket.assigns.username,
+      online_at: inspect(System.system_time(:millisecond))
+    })
+
+    push(socket, "presence_state", Presence.list(socket))
+    {:noreply, socket}
+  end
+end
+```
+
+Let's break it down. 🧱
+
+Inside the `join/3` function
+(that is called whenever a user joins the channel),
+we get the username of the user
+that is passed through the parameters
+and generate an UUID for the user.
+We assign *both of these to the socket assigns*.
+
+Inside this function,
+the user is deferred to `:after_join`,
+which is handled in 
+`handle_info(:after_join, socket)`.
+
+In this function,
+we *track the process* by calling
+`Presence.track/3`,
+where we add metadata (username and time it was online)
+to the process with the UUID we created prior.
+
+We then *push* this 
+presence information
+to the client
+as a `"presence_state"` event.
+
+This metadata will be shown
+in the `Flutter` client app.
+
+And that's it! 👏
+The only thing that's left 
+is to connect the `Flutter` app
+to our `Phoenix` server
+and communicate with it!
+
+## 4. Connect `Flutter` to `Phoenix`

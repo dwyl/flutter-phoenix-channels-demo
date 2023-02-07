@@ -106,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                       child: TextFormField(
+                    enabled: !_connected,
                     onChanged: (value) => setState(() {
                       _username = value;
                     }),
