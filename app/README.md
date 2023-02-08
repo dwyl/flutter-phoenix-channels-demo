@@ -43,3 +43,25 @@ If you've followed the steps correctly
 for your own device or emulator,
 you should have the `Flutter` app
 properly running!
+
+# Deploying it 
+
+To deploy this app for any platform
+and connect to a `Phoenix` server
+that is not running on `localhost`,
+you can change the `SERVER_URL`
+and `CHANNEL_NAME` env variables
+when creating the
+[build](https://docs.flutter.dev/deployment/web)
+by defining them
+in the `--dart-define` argument.
+
+```sh
+flutter build web --dart-define=SERVER_URL=ws://localhost:4000/socket/websocket --dart-define=CHANNEL_NAME=room:lobby  
+```
+
+When running this command,
+a `build` folder will be created
+with the release bundle
+that can be used to be deployed
+in your preferred provider.

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phoenix_socket/phoenix_socket.dart';
 
-const socketURL = "ws://localhost:4000/socket/websocket";
-const channelName = "room:lobby";
+const socketURL = String.fromEnvironment('SERVER_URL', defaultValue: 'ws://localhost:4000/socket/websocket');
+const channelName = String.fromEnvironment('CHANNEL_NAME', defaultValue: 'room:lobby');
 
 // coverage:ignore-start
 void main() {
