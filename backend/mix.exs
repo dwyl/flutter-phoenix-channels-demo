@@ -9,7 +9,15 @@ defmodule App.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        c: :test,
+        coveralls: :test,
+        "coveralls.json": :test,
+        "coveralls.html": :test,
+        t: :test
+      ]
     ]
   end
 
@@ -39,7 +47,10 @@ defmodule App.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:uuid, "~> 1.1" }
+      {:uuid, "~> 1.1" },
+
+      # Track test coverage: github.com/parroty/excoveralls
+      {:excoveralls, "~> 0.15", only: [:test, :dev]},
     ]
   end
 
@@ -53,7 +64,9 @@ defmodule App.MixProject do
     [
       setup: ["deps.get", "assets.setup"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      c: ["coveralls.html"],
+      t: ["test"]
     ]
   end
 end
