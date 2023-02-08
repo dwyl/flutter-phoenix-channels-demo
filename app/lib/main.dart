@@ -4,9 +4,11 @@ import 'package:phoenix_socket/phoenix_socket.dart';
 const socketURL = "ws://localhost:4000/socket/websocket";
 const channelName = "room:lobby";
 
+// coverage:ignore-start
 void main() {
   runApp(const MyApp());
 }
+// coverage:ignore-end
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -83,14 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _responses = [];
       });
     }
-  }
-
-  @override
-  void dispose() {
-    _presence.dispose();
-    _channel.close();
-    _socket.dispose();
-    super.dispose();
   }
 
   @override
