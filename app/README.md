@@ -65,3 +65,28 @@ a `build` folder will be created
 with the release bundle
 that can be used to be deployed
 in your preferred provider.
+
+In this directory you can find
+the [`fly.toml`](./fly.toml)
+and [`Dockerfile`](./Dockerfile) files
+that can be used to install in 
+https://fly.io/.
+
+You can use `flyctl`,
+Fly.io's 
+[command-line interface](https://fly.io/docs/hands-on/install-flyctl/)
+to deploy the `build` bundle online.
+
+If you run in the root directory
+inside the `app` folder:
+
+```sh
+fly launch
+```
+
+You can follow the instructions
+to deploy the `Flutter` app
+as a [PWA](https://web.dev/progressive-web-apps/)
+online.
+
+
