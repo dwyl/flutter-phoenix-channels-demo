@@ -642,7 +642,10 @@ class _MyHomePageState extends State<MyHomePage> {
       // If stream is closed
       _socket.closeStream.listen((event) {
         _socket.close();
-        setState(() => _connected = false);
+        setState(() {
+          _connected = false;
+          _responses = [];
+        });
       });
 
       // If stream is open, join channel with username as param
@@ -816,7 +819,10 @@ whenever the user presses the button.
       // If stream is closed
       _socket.closeStream.listen((event) {
         _socket.close();
-        setState(() => _connected = false);
+        setState(() {
+          _connected = false;
+          _responses = [];
+        });
       });
 
       // If stream is open, join channel with username as param
