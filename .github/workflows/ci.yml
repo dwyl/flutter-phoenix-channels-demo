@@ -88,6 +88,9 @@ jobs:
       - name: Create release build
         run: flutter build web --dart-define=SERVER_URL=wss://${{ secrets.FRONTEND_DOMAIN }}/socket/websocket --dart-define=CHANNEL_NAME=room:lobby  
 
+      - name: ls
+        run: ls
+
       - uses: superfly/flyctl-actions@1.1
         with:
           args: "deploy --config ./app/fly.toml --dockerfile ./app/Dockerfile"
