@@ -65,6 +65,10 @@ jobs:
   flutter_deploy:
     name: Deploy Flutter app
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+
     needs: [flutter_build, phoenix_build]
     # https://stackoverflow.com/questions/58139406/only-run-job-on-specific-branch-with-github-actions
     #if: github.ref == 'refs/heads/main'
