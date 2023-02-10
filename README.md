@@ -980,6 +980,23 @@ or just want to push simple messages to the socket!
 As you can see, 
 it is *easy* to get a real-time app working in `Flutter`!
 
+# Deployment 📦
+
+If you are keen on deploying both of these applications online,
+in each folder we have created a `fly.toml` file
+that can be used to deploy both applications
+to [fly.io](https://fly.io/dashboard).
+
+You need to create an account
+and install the the command-line interface
+[`flyctl`](https://fly.io/docs/hands-on/install-flyctl/) 
+to make use of these `fly.toml` files 
+and easily deploy both apps.
+
+You can find more information 
+on how to deploy both applications
+in their respective folders.
+
 # Star the Project ⭐
 
 If you've enjoyed this tutorial,
