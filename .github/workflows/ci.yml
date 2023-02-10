@@ -74,7 +74,14 @@ jobs:
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+
+      # Creates the release build. 
+      # The SERVER_URL must point to the backend domain so the frontend can connect. 
+      # It is defined in the repo secret.
+      - name: Create release build
+        run: flutter build web --dart-define=SERVER_URL=wss://${{ secrets.FRONTEND_DOMAIN }}/socket/websocket --dart-define=CHANNEL_NAME=room:lobby  
+
       - uses: superfly/flyctl-actions@1.1
         with:
-          args: "deploy --config ./fly.toml --dockerfile ./Dockerfile"
+          args: "deploy --config ./app/fly.toml --dockerfile ./app/Dockerfile"
