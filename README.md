@@ -148,7 +148,7 @@ on an emulator,
 please visit the link above,.
 
 On the other hand,
-ff you want to run the app
+if you want to run the app
 on a real device,
 check 
 https://github.com/dwyl/flutter-stopwatch-tutorial/tree/33907b1b01760dd49db85fa97fb84ce4562252ae#running-on-a-real-device
