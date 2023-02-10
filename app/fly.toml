@@ -1,4 +1,4 @@
-# fly.toml file generated for flutter-phoenix-channels-frontend on 2023-02-08T18:20:11Z
+# fly.toml file generated for flutter-phoenix-channels-frontend on 2023-02-09T14:47:27Z
 
 app = "flutter-phoenix-channels-frontend"
 kill_signal = "SIGINT"
