@@ -1,4 +1,4 @@
-# fly.toml file generated for flutter-phoenix-channels-backend on 2023-02-10T13:55:21Z
+# fly.toml file generated for flutter-phoenix-channels-backend on 2023-02-10T16:37:43Z
 
 app = "flutter-phoenix-channels-backend"
 kill_signal = "SIGTERM"
