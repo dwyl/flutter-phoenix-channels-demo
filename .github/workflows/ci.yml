@@ -74,4 +74,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions@1.1
         with:
-          args: "deploy --config ./app/fly.toml"
+          args: "deploy --config ./app/fly.toml --dockerfile ./app/Dockerfile"
