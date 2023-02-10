@@ -76,6 +76,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.8'
+          channel: 'stable'
+
       # Creates the release build. 
       # The SERVER_URL must point to the backend domain so the frontend can connect. 
       # It is defined in the repo secret.
