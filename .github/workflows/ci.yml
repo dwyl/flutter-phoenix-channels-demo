@@ -93,4 +93,4 @@ jobs:
 
       - uses: superfly/flyctl-actions@1.1
         with:
-          args: "deploy --config ./app/fly.toml --dockerfile ./app/Dockerfile"
+          args: "deploy app/
