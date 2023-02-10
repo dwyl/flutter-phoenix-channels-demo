@@ -79,6 +79,7 @@ the `Phoenix` server is deployed in.
 > so `SERVER_URL`
 > should be something like
 > `wss://flutter-phoenix-channels-backend.fly.dev/socket/websocket`.
+> 
 > Notice we are using `wss` instead of `ws`.
 > `wss` is to `https` what `ws` is to `http`.
 > It's a more secure communication protocol.
