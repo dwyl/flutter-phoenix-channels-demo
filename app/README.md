@@ -44,7 +44,8 @@ for your own device or emulator,
 you should have the `Flutter` app
 properly running!
 
-# Deploying it 
+
+# Deploying 📦
 
 To deploy this app for any platform
 and connect to a `Phoenix` server
@@ -52,7 +53,7 @@ that is not running on `localhost`,
 you can change the `SERVER_URL`
 and `CHANNEL_NAME` env variables
 when creating the
-[build](https://docs.flutter.dev/deployment/web)
+[bundle](https://docs.flutter.dev/deployment/web)
 by defining them
 in the `--dart-define` argument.
 
@@ -66,27 +67,23 @@ with the release bundle
 that can be used to be deployed
 in your preferred provider.
 
-In this directory you can find
-the [`fly.toml`](./fly.toml)
-and [`Dockerfile`](./Dockerfile) files
-that can be used to install in 
-https://fly.io/.
+Change the `SERVER_URL` 
+env variable
+according to the URL
+the `Phoenix` server is deployed in.
 
-You can use `flyctl`,
-Fly.io's 
-[command-line interface](https://fly.io/docs/hands-on/install-flyctl/)
-to deploy the `build` bundle online.
+> **Note** Remember,
+> the `Flutter` app will connect
+> to a websocket channel.
+> `Fly.io` will deploy with `HTTPS` certificate,
+> so `SERVER_URL`
+> should be something like
+> `wss://flutter-phoenix-channels-backend.fly.dev/socket/websocket`.
+> Notice we are using `wss` instead of `ws`.
+> `wss` is to `https` what `ws` is to `http`.
+> It's a more secure communication protocol.
 
-If you run in the root directory
-inside the `app` folder:
-
-```sh
-fly launch
-```
-
-You can follow the instructions
-to deploy the `Flutter` app
-as a [PWA](https://web.dev/progressive-web-apps/)
-online.
-
-
+To deploy this `PWA` to `fly.io`,
+follow the instructions
+in [`backend/README.md`](../backend/README.md)
+to use the `flyctl` CLI.
