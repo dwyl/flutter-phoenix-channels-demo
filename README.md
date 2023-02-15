@@ -188,7 +188,7 @@ mix phx.new . --app app --no-ecto --no-html --no-gettext --no-dashboard --no-mai
 > We want a simple, lightweight server
 > to create 
 > [channels](https://hexdocs.pm/phoenix/channels.html)
-> where users will join and leave.
+> where people will join and leave.
 
 After executing this command,
 when prompted to install the dependencies,
@@ -202,7 +202,7 @@ and you should see your server running!
 
 In `Phoenix`,
 let's start by creating a 
-channel/room for users to join in.
+channel/room for people to join in.
 
 For this, 
 inside the `backend` directory,
@@ -257,7 +257,7 @@ Open `lib/app_web/endpoint.ex` and add:
 
 And we're done! 🎉
 We've successfully created a 
-channel/room that users can join in.
+channel/room that people can join in.
 We will be able to do whatever we want
 and handle different events
 inside `lib/app_web/channels/room_channel.ex`
@@ -270,13 +270,13 @@ Let's go back to `Flutter`.
 As it stands, 
 we don't want a *counter app*.
 We want a simple page
-allowing the user to connect
+allowing the person to connect
 to the room 
 and see who's also online.
 
-We want the user to type a username,
+We want the person to type a username,
 connect 
-and see the current users.
+and see the current people.
 
 Let's create a screen for this.
 Inside `lib/main.dart`,
@@ -379,8 +379,7 @@ and change the title, like so.
 
 We've created a simple page
 with a `ListView`
-that will show the list of users 
-connected.
+that will show the list of people connected.
 For now, 
 we are just adding `Container`s
 with sample data.
@@ -391,12 +390,12 @@ if the username is empty.
 
 Connection status is shown 
 with a `Textfield` 
-informing the user if he/she is connected or not.
+informing the person if he/she is connected or not.
 
 Both the `username` and `connection` status
 are part of the state of the page,
 which will dynamically change
-according to the user actions
+according to the person actions
 (changing the username
 and connection to the Phoenix
 channel, respectively).
@@ -411,16 +410,16 @@ The app should have the following layout.
 
 ![basic_layout](https://user-images.githubusercontent.com/17494745/217049291-d5ccbe95-16e9-4f83-b2fe-c930b6cee9a8.png)
 
-## 3. Tracking users in `Phoenix` server
+## 3. Tracking people in `Phoenix` server
 
 As it stands, `Phoenix`
 doesn't really have a way of knowing 
-*which* and *how many* users/processes
+*which* and *how many* people/processes
 are connected to the channel.
 
 Tracking these processes is necessary
 to know *who is online*
-so we can display the username to the user in `Flutter`.
+so we can display the username to the person in `Flutter`.
 
 Luckily for us, `Phoenix`
 has a module called 
@@ -478,7 +477,7 @@ And that's it!
 We've just *configured* `Presence`.
 Now it's time to *use it*!
 
-### 3.1 Tracking users 
+### 3.1 Tracking people 
 
 For each process 
 we are going to be tracking with `Presence`, 
@@ -535,14 +534,14 @@ end
 Let's break it down. 🧱
 
 Inside the `join/3` function
-(that is called whenever a user joins the channel),
-we get the username of the user
+(that is called whenever a person joins the channel),
+we get the username of the person
 that is passed through the parameters
-and generate an UUID for the user.
+and generate an UUID for the person.
 We assign *both of these to the socket assigns*.
 
 Inside this function,
-the user is deferred to `:after_join`,
+the person is deferred to `:after_join`,
 which is handled in 
 `handle_info(:after_join, socket)`.
 
@@ -757,9 +756,9 @@ We import the package like so.
 import 'package:phoenix_socket/phoenix_socket.dart';
 ```
 
-We want the user to connect
+We want the person to connect
 to the channel after pressing the button.
-The user **must have an username**
+The person **must have an username**
 to connect to the server.
 
 Hence why the button is only enabled
@@ -771,7 +770,7 @@ Therefore, we have two fields
 `_connected` and `_username`
 that change according 
 to the status of the connection
-and as the user is typing in the `Textfield`,
+and as the person is typing in the `Textfield`,
 respectively.
 
 ```dart
@@ -863,7 +862,7 @@ whenever the user presses the button.
 In this function 
 we initialize four fields:
 - `_socket`, pertaining to the socket connection.
-- `_channel`, pertaining to the channel the user is joining.
+- `_channel`, pertaining to the channel the person is joining.
 - `_presence`, an object with the `Presence` information
 of the given channel.
 - `responses`, a list of users currently connected
@@ -873,11 +872,11 @@ is so you know it's a `diff` response from the presence server
 that is *parsed* into a list of connected users.
 
 This function first verifies
-if the user is already connected or not.
+if the person is already connected or not.
 If he/she is, 
-it means the user wants to disconnect
+it means the person wants to disconnect
 and we close the socket connection
-and reset the `responses` user array to an empty array.
+and reset the `responses` person array to an empty array.
 
 On the other hand,
 if it's not connected,
@@ -898,7 +897,7 @@ we close the socket connection
 and set `_connected` to `false`
 to show the appropriate feedback.
 - Otherwise, if the stream is **open**,
-it means the user is **connected**.
+it means the person is **connected**.
 We join the channel
 and send the `_username` as parameters
 to the `Phoenix` server.
@@ -942,7 +941,7 @@ We are simply iterating over
 `_responses` 
 and creating a `SizedBox` 
 with a fixed height
-with the username of the connected user.
+with the username of the connected person.
 
 As seen earlier, 
 `_connected` is updated
