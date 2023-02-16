@@ -1,0 +1,111 @@
+name: build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  flutter_build:
+    name: Flutter build
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./app
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Installing Flutter because it's easier to generate .lcov files for test coverage
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.8'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Your project will need to have tests in test/ and a dependency on
+      # package:test for this step to succeed. Note that Flutter projects will
+      # want to change this to 'flutter test'.
+      - name: Check build
+        run: flutter analyze
+
+  phoenix_build:
+    name: Phoenix build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.14.2' # Define the elixir version [required]
+        otp-version: '25.1.2' # Define the OTP version [required]
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mix-
+    - name: Install dependencies
+      run: mix deps.get
+    - name: Run Tests
+      run: mix coveralls.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MIX_ENV: test
+
+  # Continuous Deployment to Fly.io
+  # https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+  flutter_deploy:
+    name: Deploy Flutter app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    needs: [flutter_build, phoenix_build]
+    # https://stackoverflow.com/questions/58139406/only-run-job-on-specific-branch-with-github-actions
+    if: github.ref == 'refs/heads/main'
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.8'
+          channel: 'stable'
+
+      # Creates the release build. 
+      # The SERVER_URL must point to the backend domain so the frontend can connect. 
+      # It is defined in the repo secret.
+      - name: Create release build
+        run: flutter build web --dart-define=SERVER_URL=wss://${{ secrets.BACKEND_DOMAIN }}/socket/websocket --dart-define=CHANNEL_NAME=room:lobby  
+
+      - uses: superfly/flyctl-actions@1.1
+        with:
+          args: "deploy app/"
+
+  phoenix_deploy:
+    name: Deploy Phoenix app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+    needs: [flutter_build, phoenix_build]
+    # https://stackoverflow.com/questions/58139406/only-run-job-on-specific-branch-with-github-actions
+    if: github.ref == 'refs/heads/main'
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: superfly/flyctl-actions@1.1
+        with:
+          args: "deploy backend/"
