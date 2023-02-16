@@ -105,10 +105,14 @@ that the client `Flutter` app will connect to.
 
 We recommend you opening *two* 
 different terminal windows
-(one for each folder)
+(one for each folder).
+Then open the `README.md` file 
+in each of these folders
 and follow the instructions
-inside each one to run this project
+to run the project
 and see it in action!
+
+<br />
 
 ## 0. Creating basic `Flutter` app
 
