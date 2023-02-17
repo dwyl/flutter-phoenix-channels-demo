@@ -12,6 +12,7 @@ and provide the user with a better experience!
 
 - [Enhancing our `PWA` 👩‍💻](#enhancing-our-pwa-)
 - [Checking the current `PWA` of the app](#checking-the-current-pwa-of-the-app)
+- [Changing the icon](#changing-the-icon)
 
 # Checking the current `PWA` of the app
 
@@ -56,4 +57,114 @@ its own app name and it's missing some information.
 **This is what we are going to be addressing in this guide**.
 
 Let's do it together! 🤝
+
+# Changing the icon
+
+Changing the icon of your Flutter app
+can be a *cumbersome process*,
+as we would need to *manually* change the favicon
+for each platform.
+
+This is not scalable.
+Hence why we are going to be using the
+[`flutter_launcher_icons`(https://github.com/fluttercommunity/flutter_launcher_icons/)
+package to make this process **much easier**.
+
+For this, we need to do some setup.
+In the `pubspec.yaml` file,
+add the following line 
+in the `dev_dependencies` section,
+to install `flutter_launcher_icons`.
+
+```yml
+dev_dependencies:
+  flutter_launcher_icons: "^0.11.0"
+```
+
+In the same file,
+add the following code at the end of the file.
+
+
+```yml
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 48 
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"
+```
+
+We are setting the 
+*path* to the icon image
+we want to be used 
+in the different platforms.
+
+We are able to define many aspects
+of the icon,
+including the `background_color`,
+the `theme_color`,
+its size,
+and customize it according to each platform.
+
+You can find a more comprehensive list 
+of possible configurations in 
+https://github.com/fluttercommunity/flutter_launcher_icons/#mag-attributes.
+
+You might have noticed we have used
+the path `assets/icon/icon.png`.
+We need to create it 
+and add the `icon.png` file 
+so this tool can generate the icons
+for each platform properly.
+
+After creating the directory,
+you can use the image
+in [`assets/icon/icon.png`](assets/icon/icon.png),
+if you want to.
+
+After this,
+simply run the following command.
+
+```sh
+flutter pub run flutter_launcher_icons
+```
+
+The terminal will output 
+this information:
+
+```sh
+ase) lucho@Luiss-MBP app % flutter pub run flutter_launcher_icons
+  ════════════════════════════════════════════
+     FLUTTER LAUNCHER ICONS (v0.11.0)                               
+  ════════════════════════════════════════════
+  
+• Creating default icons Android
+• Adding a new Android launcher icon
+
+WARNING: Icons with alpha channel are not allowed in the Apple App Store.
+Set "remove_alpha_ios: true" to remove it.
+
+• Overwriting default iOS launcher icon with new icon
+Creating Icons for Web...
+Creating Icons for Windows...
+Creating Icons for MacOS...
+
+✓ Successfully generated launcher icons
+```
+
+Awesome! 🎨
+
+We've now created icons for all the chosen platforms!
+And quite fast, might I add! 😉
+
 
