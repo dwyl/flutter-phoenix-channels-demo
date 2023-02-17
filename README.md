@@ -1009,16 +1009,15 @@ to iOS, Android and Web devices.
 
 For the latter, 
 when creating the **release bundle**,
-the user is *able to download a [`PWA`](https://web.dev/progressive-web-apps/)*
-with basic configurations.
+the user is *able to download a [`PWA`](https://web.dev/progressive-web-apps/)*.
 
-We can *enhance it so it works better on all platforms*
-and make it better!
+We can *enhance its capabilities*
+and make it better and prettier!
 By default, any `Flutter` app 
 has `PWA` capabilities built-in.
 It's our job, as developers,
 to *extend them* 
-and make the experience ofr our users **better**!
+and make the experience for our users **better**!
 
 We've created a guide with this in mind in
 [`./app/pwa.md`](./app/pwa.md)

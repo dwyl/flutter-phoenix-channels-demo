@@ -2,11 +2,12 @@
 
 # Enhancing our `PWA` 👩‍💻 
 
-This is a small guide
+This is a small document
 that will guide you 
-to deploy enhance the `Flutter` app,
+to enhance the `Flutter` app,
 making it a *better* `PWA` for selected platforms,
-and provide the person with a better experience!
+and provide the person using it
+with a better experience!
 
 </div>
 
@@ -22,7 +23,7 @@ After you've deployed your application to the web,
 you will be able to download it as a `PWA`.
 
 If you want to check this out,
-you can check deployed app in
+you can check the deployed app in
 https://flutter-phoenix-channels-frontend.fly.dev/.
 
 To install the `PWA`,
@@ -70,7 +71,7 @@ for each platform.
 
 This is not scalable.
 Hence why we are going to be using the
-[`flutter_launcher_icons`(https://github.com/fluttercommunity/flutter_launcher_icons/)
+[`flutter_launcher_icons`](https://github.com/fluttercommunity/flutter_launcher_icons/)
 package to make this process **much easier**.
 
 For this, we need to do some setup.
@@ -85,7 +86,7 @@ dev_dependencies:
 ```
 
 In the same file,
-add the following code at the end of the file.
+add the following code at the end of it.
 
 
 ```yml
@@ -320,12 +321,3 @@ Congratulations! 🎉
 We've made the process of installing our `PWA`
 much prettier 🎨
 and meaningful! ✍️
-
-
-
-
-
-
-- no final, mostrar PWA no mobile, web 
-- e como tambem a aplicacao mudou de icone
-
