@@ -14,6 +14,7 @@ and provide the person with a better experience!
 - [Checking the current `PWA` of the app](#checking-the-current-pwa-of-the-app)
 - [Changing the icon](#changing-the-icon)
 - [Setting the name of the app](#setting-the-name-of-the-app)
+- [Let's see the final result! ✨](#lets-see-the-final-result-)
 
 # Checking the current `PWA` of the app
 
@@ -260,6 +261,65 @@ and change it to the following.
 
 And you're done!
 
+# Let's see the final result! ✨
+
+We've made a few changes.
+Let's see them in action!
+
+If we *rebuild and create a new release bundle*,
+like so:
+
+```sh
+flutter build web --dart-define=SERVER_URL=wss://flutter-phoenix-channels-backend.fly.dev/socket/websocket --dart-define=CHANNEL_NAME=room:lobby
+```
+
+> **Note** 
+>
+> This will create a release bundle for the web
+> in `build/web`.
+> We are pointing this app release
+> to the `Phoenix` server that is deployed in
+> `wss://flutter-phoenix-channels-backend.fly.dev/socket/websocket`
+> so you don't have to start the `Phoenix` server on your own. 
+
+After this process is complete,
+we can navigate into the directory
+and start a simple server to 
+*serve* these static files 
+to our `localhost`.
+
+```sh
+cd build/web
+python -m http.server 8000
+```
+
+This assumes you have 
+[`Python`](https://www.python.org/)
+installed.
+We are running this on port `8000`.
+
+Alternatively, 
+you can deploy this to your account on `fly.io`.
+Check the [`README.md`](../README.md) for more information.
+
+After running this command,
+the app we've just updated should be accesible
+in [`localhost:8000`](http://localhost:8000/).
+
+<img width="815" alt="image" src="https://user-images.githubusercontent.com/17494745/219745329-e37596ce-4934-49bd-b7e0-11329c375f3d.png">
+
+You will notice that the 
+*favicon* of the app has changed,
+as well as the title!
+
+If you try to install the `PWA`,
+you will notice that the new logo is being shown,
+as well as the name we've defined in the `manifest.json` file!
+
+Congratulations! 🎉
+We've made the process of installing our `PWA`
+much prettier 🎨
+and meaningful! ✍️
 
 
 
