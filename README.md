@@ -1000,6 +1000,33 @@ You can find more information
 on how to deploy both applications
 in their respective folders.
 
+
+# Enhancing the `PWA`
+
+Since we've used `Flutter`,
+we can leverage its capabilities to deploy it
+to iOS, Android and Web devices.
+
+For the latter, 
+when creating the **release bundle**,
+the user is *able to download a [`PWA`](https://web.dev/progressive-web-apps/)*
+with basic configurations.
+
+We can *enhance it so it works better on all platforms*
+and make it better!
+By default, any `Flutter` app 
+has `PWA` capabilities built-in.
+It's our job, as developers,
+to *extend them* 
+and make the experience ofr our users **better**!
+
+We've created a guide with this in mind in
+[`./app/pwa.md`](./app/pwa.md)
+that you can follow 
+and enhance the `Flutter` app 
+to make it awesome-er! 
+
+
 # Star the Project ⭐
 
 If you've enjoyed this tutorial,
