@@ -6,13 +6,14 @@ This is a small guide
 that will guide you 
 to deploy enhance the `Flutter` app,
 making it a *better* `PWA` for selected platforms,
-and provide the user with a better experience!
+and provide the person with a better experience!
 
 </div>
 
 - [Enhancing our `PWA` 👩‍💻](#enhancing-our-pwa-)
 - [Checking the current `PWA` of the app](#checking-the-current-pwa-of-the-app)
 - [Changing the icon](#changing-the-icon)
+- [Setting the name of the app](#setting-the-name-of-the-app)
 
 # Checking the current `PWA` of the app
 
@@ -58,6 +59,7 @@ its own app name and it's missing some information.
 
 Let's do it together! 🤝
 
+
 # Changing the icon
 
 Changing the icon of your Flutter app
@@ -87,21 +89,15 @@ add the following code at the end of the file.
 
 ```yml
 flutter_icons:
-  android: "launcher_icon"
-  ios: true
   image_path: "assets/icon/icon.png"
+  android: true
+  ios: true
   web:
     generate: true
-    image_path: "assets/icon/icon.png"
-    background_color: "#FFFFFF"
-    theme_color: "#FFFFFF"
   windows:
     generate: true
-    image_path: "assets/icon/icon.png"
-    icon_size: 48 
   macos:
     generate: true
-    image_path: "assets/icon/icon.png"
 ```
 
 We are setting the 
@@ -167,4 +163,109 @@ Awesome! 🎨
 We've now created icons for all the chosen platforms!
 And quite fast, might I add! 😉
 
+
+# Setting the name of the app
+
+In the 
+[Checking the current `PWA` of the app](#checking-the-current-pwa-of-the-app)
+section of this document,
+you might have noticed that,
+when installing the PWA,
+the person sees the `Flutter` logo
+and `"app"` in the pop-up window.
+
+We should change this to something more meaningful.
+`PWA`s, how they're installed and how they look when installing,
+abide by the rules stated in a file called 
+[`manifest.json`](https://web.dev/add-manifest/).
+This file has a list of attributes
+that can be tweaked.
+
+You can find this file in
+`web/manifest.json`.
+Open it and change the following attributes,
+leaving the others intact:
+
+- `name`, which is the primary identifier of the `PWA` extension.
+It will be displayed in the **install dialog**,
+**extension management UI**
+and in the **Chrome Web Store**.
+- `short_name`, which is a short version of the `name`.
+It's entirely optional but it will show when 
+there's insufficient space to display the `name`.
+- `description`, which is a simple explanation of what the app does.
+
+```json
+{
+    "name": "Flutter & Phoenix Channels",
+    "short_name": "flutter_n_phoenix",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "description": "A simple application where you can connect to a Phoenix server through websockets.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
+```
+
+While we're at it,
+we can make the title of the tab in Chrome
+more meaningful, as well.
+
+Instead of it being titled `"Flutter Demo"`,
+let's change it to `"Flutter & Phoenix Channels"`.
+
+To do this,
+simply open `lib/main.dart`,
+locate the `MaterialApp`,
+in the `build()` function of `MyApp` class,
+and change it to the following.
+
+```dart
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter & Phoenix Channels',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Who\'s online?'),
+    );
+  }
+```
+
+And you're done!
+
+
+
+
+
+
+
+- no final, mostrar PWA no mobile, web 
+- e como tambem a aplicacao mudou de icone
 
