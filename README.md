@@ -1009,7 +1009,8 @@ to iOS, Android and Web devices.
 
 For the latter, 
 when creating the **release bundle**,
-the user is *able to download a [`PWA`](https://web.dev/progressive-web-apps/)*.
+the person is able to download a [`PWA`](https://web.dev/progressive-web-apps/) 
+(Progressive Web App).
 
 We can *enhance its capabilities*
 and make it better and prettier!
