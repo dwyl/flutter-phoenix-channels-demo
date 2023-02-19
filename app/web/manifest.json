@@ -1,11 +1,11 @@
 {
-    "name": "app",
-    "short_name": "app",
+    "name": "Flutter & Phoenix Channels",
+    "short_name": "flutter_n_phoenix",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#FFFFFF",
+    "description": "A simple application where you can connect to a Phoenix server through websockets.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
