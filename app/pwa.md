@@ -141,7 +141,7 @@ The terminal will output
 this information:
 
 ```sh
-ase) lucho@Luiss-MBP app % flutter pub run flutter_launcher_icons
+flutter pub run flutter_launcher_icons
   ════════════════════════════════════════════
      FLUTTER LAUNCHER ICONS (v0.11.0)                               
   ════════════════════════════════════════════
