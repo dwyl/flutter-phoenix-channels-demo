@@ -997,6 +997,21 @@ you may see the following result.
 This is *not good news*,
 especially if you're looking for a good SEO rank.
 
+> The reason we get an error in the `Performance` metric is
+> because `flutter build web` will build
+> the site with 
+> [default web renderers](https://docs.flutter.dev/development/platform-integration/web/renderers),
+> which is `CanvasKit` for desktop devices
+> and `HTML` for mobile devices.
+>
+> You can **override the desktop build with `html`**,
+> if you want to. 
+> It will yield different results.
+>
+> You can find more about the difference
+> of using both renderers in
+> https://geekyants.com/blog/web-renderers-which-one-to-choose-html-or-canvaskit/.
+
 `Flutter Web`'s initial loading times 
 has been thoroughly discussed
 (e.g. https://github.com/flutter/flutter/issues/76009)
@@ -1015,7 +1030,9 @@ and initializing the service worker.
 [the DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)
 for the Flutter app to run.
 
-This process can take a while.
+This process can take a few seconds,
+which is *not desirable*.
+
 However,
 we can **improve `Lighthouse` metrics**
 by adding a splash screen,
@@ -1023,7 +1040,156 @@ letting the user know this initialization process
 is occurring,
 instead of just showing a blank screen.
 
+Luckily for us, 
+we can leverage 
+the `_flutter.loader.loadEntrypoint` callback functions
+inside `web/index.html`
+to customize the splash screen 
+and the progress.
 
+Head over to `web/index.html`,
+and locate the `<body>` of the file.
+You should find something like the snippet of code below.
+
+```html
+<body>
+
+  <script>
+    window.addEventListener('load', function(ev) {
+
+        // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        }
+      }).then(function(engineInitializer) {
+        return engineInitializer.initializeEngine();
+      }).then(function(appRunner) {
+        return appRunner.runApp();
+      });
+    });
+  </script>
+</body>
+```
+
+Change it to the following.
+
+```html
+<body>
+  <div id="loading">
+    <style>
+      body {
+        inset: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        position: fixed;
+      }
+
+      #loading {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        width: 100%;
+      }
+
+      #loading span {
+        color: #111; 
+        font-family: 'Open Sans', sans-serif; 
+        font-size: 30px; 
+        font-weight: 300; 
+        line-height: 32px;
+        margin: 0 0 72px; 
+        text-align: center; 
+      }
+
+      #loading img {
+        animation: 1s ease-in-out 0s infinite alternate breathe;
+        opacity: .66;
+        transition: opacity .4s;
+      }
+
+      #loading.main_done img {
+        opacity: 1;
+      }
+
+      #loading.init_done img {
+        animation: .33s ease-in-out 0s 1 forwards zooooom;
+        opacity: .05;
+      }
+
+      @keyframes breathe {
+        from {
+          transform: scale(1)
+        }
+
+        to {
+          transform: scale(0.95)
+        }
+      }
+
+      @keyframes zooooom {
+        from {
+          transform: scale(1)
+        }
+
+        to {
+          transform: scale(10)
+        }
+      }
+    </style>
+    <img src="icons/Icon-512.png" alt="Loading indicator..." />
+    <span id="loading-text">asd</span>
+  </div>
+  <script>
+    window.addEventListener('load', function(ev) {
+
+      // Showing loading indicator
+      var loading = document.querySelector('#loading');
+      var loadingText = document.querySelector('#loading-text');
+      loadingText.textContent = "Loading entrypoint...";
+
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: async function(engineInitializer) {
+          loadingText.textContent = "Initializing engine...";
+          
+          let appRunner = await engineInitializer.initializeEngine();
+
+          loading.style.display = 'none';
+          await appRunner.runApp();
+        }
+      });
+    });
+  </script>
+</body>
+```
+
+We've added a simple `<div>` element
+with id `"loading`" 
+with a text inside.
+Inside this element we will show
+**an image** and a **text** that will change
+according to the different stage of the initialization process.
+
+If you run the web application again,
+you should see something like this.
+
+![final](https://user-images.githubusercontent.com/17494745/221218715-29e10501-0748-4ab0-9ea7-ce57eb6c5cec.gif)
+
+Looks a bit better, doesn't it?
+
+Let's see how the `Lighthouse` metrics are improved!
+
+<img width="1206" alt="improved_lighthouse" src="https://user-images.githubusercontent.com/17494745/221225710-0ee26cb3-da6f-4dfd-93ac-bc3618dd7a46.png">
+
+We've score a 96 on performance!
+That's awesome! 🤩
 
 
 

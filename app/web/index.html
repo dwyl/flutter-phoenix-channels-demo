@@ -40,13 +40,80 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
-  <div id="loading"></div>
+  <div id="loading">
+    <style>
+      body {
+        inset: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        position: fixed;
+      }
+
+      #loading {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        width: 100%;
+      }
+
+      #loading span {
+        color: #111; 
+        font-family: 'Open Sans', sans-serif; 
+        font-size: 30px; 
+        font-weight: 300; 
+        line-height: 32px;
+        margin: 0 0 72px; 
+        text-align: center; 
+      }
+
+      #loading img {
+        animation: 1s ease-in-out 0s infinite alternate breathe;
+        opacity: .66;
+        transition: opacity .4s;
+      }
+
+      #loading.main_done img {
+        opacity: 1;
+      }
+
+      #loading.init_done img {
+        animation: .33s ease-in-out 0s 1 forwards zooooom;
+        opacity: .05;
+      }
+
+      @keyframes breathe {
+        from {
+          transform: scale(1)
+        }
+
+        to {
+          transform: scale(0.95)
+        }
+      }
+
+      @keyframes zooooom {
+        from {
+          transform: scale(1)
+        }
+
+        to {
+          transform: scale(10)
+        }
+      }
+    </style>
+    <img src="icons/Icon-512.png" alt="Loading indicator..." />
+    <span id="loading-text">asd</span>
+  </div>
   <script>
     window.addEventListener('load', function(ev) {
 
       // Showing loading indicator
       var loading = document.querySelector('#loading');
-      loading.textContent = "Loading entrypoint...";
+      var loadingText = document.querySelector('#loading-text');
+      loadingText.textContent = "Loading entrypoint...";
 
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -54,10 +121,11 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: async function(engineInitializer) {
-          loading.textContent = "Initializing engine...";
+          loadingText.textContent = "Initializing engine...";
+          
           let appRunner = await engineInitializer.initializeEngine();
 
-          loading.textContent = "Running app...";
+          loading.style.display = 'none';
           await appRunner.runApp();
         }
       });
