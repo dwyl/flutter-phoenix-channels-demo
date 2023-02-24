@@ -983,6 +983,50 @@ or just want to push simple messages to the socket!
 As you can see, 
 it is *easy* to get a real-time app working in `Flutter`!
 
+## 6. *Bonus points*: Adding splash screen
+
+If you start the application
+and run [`Lighthouse`](https://developer.chrome.com/docs/lighthouse/overview/)
+(a tool that audits your web page and provides 
+hints on how to improve the quality and speed;
+it's embedded by default in Chrome browsers),
+you may see the following result.
+
+<img width="1063" alt="before_lighouse" src="https://user-images.githubusercontent.com/17494745/221198967-ad210c1e-d231-4ba9-adc0-9dc8760e6722.png">
+
+This is *not good news*,
+especially if you're looking for a good SEO rank.
+
+`Flutter Web`'s initial loading times 
+has been thoroughly discussed
+(e.g. https://github.com/flutter/flutter/issues/76009)
+amongst the Flutter community,
+as it can be considered *slow* in production
+when compared with other websites.
+
+The reason for this 
+is because `Flutter` on the *web*
+has an initialization process, 
+consisting of: 
+- fetching the `main.dart.js` script 
+and initializing the service worker.
+- initializing/downloading Flutter's web engine.
+- preparing 
+[the DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)
+for the Flutter app to run.
+
+This process can take a while.
+However,
+we can **improve `Lighthouse` metrics**
+by adding a splash screen,
+letting the user know this initialization process
+is occurring,
+instead of just showing a blank screen.
+
+
+
+
+
 # Deployment 📦
 
 If you are keen on deploying both of these applications online,
