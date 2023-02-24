@@ -40,17 +40,26 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <div id="loading"></div>
   <script>
     window.addEventListener('load', function(ev) {
+
+      // Showing loading indicator
+      var loading = document.querySelector('#loading');
+      loading.textContent = "Loading entrypoint...";
+
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: async function(engineInitializer) {
+          loading.textContent = "Initializing engine...";
+          let appRunner = await engineInitializer.initializeEngine();
+
+          loading.textContent = "Running app...";
+          await appRunner.runApp();
         }
-      }).then(function(engineInitializer) {
-        return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
-        return appRunner.runApp();
       });
     });
   </script>
