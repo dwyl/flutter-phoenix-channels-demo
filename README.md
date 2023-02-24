@@ -1012,6 +1012,11 @@ especially if you're looking for a good SEO rank.
 > You can find more about the difference
 > of using both renderers in
 > https://geekyants.com/blog/web-renderers-which-one-to-choose-html-or-canvaskit/.
+>
+> We delve into the pratical differences between 
+> these two renderers in 
+> [6.1 Switching between the `html` and `canvaskit` web renderers](#61-switching-between-the-html-and-canvaskit-web-renderers).
+
 
 `Flutter Web`'s initial loading times 
 has been thoroughly discussed
@@ -1199,7 +1204,7 @@ Let's see how the `Lighthouse` metrics are improved!
 > please refer to the [Deployment 📦](#deployment-) section.
 
 
-We've score a 96 on performance!
+We've scored a 96 on performance!
 That's awesome! 🤩
 
 ## 6.1 Switching between the `html` and `canvaskit` web renderers
@@ -1213,13 +1218,23 @@ on *desktop devices*
 and `html` on *mobile devices*.
 
 Let's explore how the metrics would be affected
-if we were to choose to override the web renderer
-with `html` on web devices.
+if we were to override the web renderer
+with **`html` on web devices**.
 
 We can do this programatically
 (just to make sure we're actually switching renderers)
 in the [`initializeEngine`](https://docs.flutter.dev/development/platform-integration/web/initialization) method
 by passing arguments.
+
+> **Note**
+>
+> We don't need to do this programatically.
+> When we run `flutter build web --web-renderer html`, for example,
+> this setting is overriden for you 
+> **without** having to tinker with any code.
+>
+> You can find more information if you run
+> `flutter build web --help`.
 
 Inside `web/index.html`, 
 locate the `<body>` and the
