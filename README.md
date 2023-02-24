@@ -15,6 +15,7 @@ and a Phoenix-based backend
 
 </div>
 
+
 <br />
 
 # Why? 🤷‍
@@ -1188,9 +1189,124 @@ Let's see how the `Lighthouse` metrics are improved!
 
 <img width="1206" alt="improved_lighthouse" src="https://user-images.githubusercontent.com/17494745/221225710-0ee26cb3-da6f-4dfd-93ac-bc3618dd7a46.png">
 
+> These `Lighthouse` metrics are being performed
+> on the **deployed version** in `Fly.io`,
+> *not* on `localhost`. 
+> This is to get more reliable results on a *real-world scenario*.
+>
+> If you aren't sure how to create a release bundle
+> and deploy to `Fly.io`,
+> please refer to the [Deployment 📦](#deployment-) section.
+
+
 We've score a 96 on performance!
 That's awesome! 🤩
 
+## 6.1 Switching between the `html` and `canvaskit` web renderers
+
+As we've mentioned prior, 
+when running `flutter build web`,
+the default behaviour is using a
+`canvaskit` 
+[web renderer](https://docs.flutter.dev/development/platform-integration/web/renderers)
+on *desktop devices*
+and `html` on *mobile devices*.
+
+Let's explore how the metrics would be affected
+if we were to choose to override the web renderer
+with `html` on web devices.
+
+We can do this programatically
+(just to make sure we're actually switching renderers)
+in the [`initializeEngine`](https://docs.flutter.dev/development/platform-integration/web/initialization) method
+by passing arguments.
+
+Inside `web/index.html`, 
+locate the `<body>` and the
+`<script>` that initializes the Flutter engine
+(the same one we changed before).
+
+Change the `_flutter.loader` method
+to the following piece of code.
+
+```js
+    _flutter.loader.loadEntrypoint({
+      serviceWorker: {
+        serviceWorkerVersion: serviceWorkerVersion,
+      },
+      onEntrypointLoaded: async function(engineInitializer) {
+        loadingText.textContent = "Initializing engine...";
+        const renderer = "canvaskit"
+        console.log(renderer)
+        
+        let appRunner = await engineInitializer.initializeEngine({"renderer": renderer});
+
+        loading.style.display = 'none';
+        await appRunner.runApp();
+      }
+    });
+```
+
+Here we are overriding the **web renderer** with **`canvaskit`**.
+Yes, it won't change anything because it's the default behaviour.
+We just want to see it printing to the console
+so we are sure the renderer is different when we check!
+
+Run the app
+and check the console!
+
+<img width="935" alt="canvaskit" src="https://user-images.githubusercontent.com/17494745/221229347-1a52d21b-20e6-47df-8295-a5efb72de6b8.png">
+
+Awesome!
+We know for sure `canvaskit` is being used.
+If we build and deploy this to `fly.io`,
+we will get the following results.
+
+<img width="1039" alt="canvas_kit_results" src="https://user-images.githubusercontent.com/17494745/221231043-f3bd000c-86b0-4056-8ddf-d95b79bf0d41.png">
+
+Exactly what we expected,
+as this was the default behaviour.
+
+**But now, let's change to `html`**.
+
+Change the `const renderer = "canvaskit"`
+in the previous code snippet to
+`const renderer = "html"`.
+
+Let's build this and run it.
+
+<img width="670" alt="html" src="https://user-images.githubusercontent.com/17494745/221231510-e34a451a-9add-4091-84d3-dba547cba7d4.png">
+
+Ok, now we got `html` being passed as the web renderer.
+Let's build this and deploy to `Fly.io`
+and run `Lighthouse`.
+
+<img width="1096" alt="html_results" src="https://user-images.githubusercontent.com/17494745/221233328-d3978570-4473-4fc1-9181-923bbd7ddee8.png">
+
+We actually see a performance improvement!
+From `96` to `99`, in fact!
+Not too shabby! ⚡️
+
+
+## 6.2 Which web renderer should I choose?
+
+As always, the answer is: 
+*it depends*.
+Here's a good resource to read that has
+an in-depth comparison between the two options: 
+https://geekyants.com/blog/web-renderers-which-one-to-choose-html-or-canvaskit/.
+
+If you want a [`tl;dr`](https://en.wikipedia.org/wiki/TL;DR#:~:text=TL%3BDR%20or%20tl%3Bdr,Oxford%20Dictionaries%20Online%20in%202013.),
+and quoting the article:
+
+> Choose the `html` option 
+> if you are optimizing download size over 
+> performance on both desktop and mobile browsers.
+
+> Choose the `canvaskit` option 
+> if you are prioritizing performance 
+> and pixel-perfect consistency 
+> on both desktop and mobile browsers.
 
 
 # Deployment 📦
