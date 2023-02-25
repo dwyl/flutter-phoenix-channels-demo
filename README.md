@@ -2,18 +2,45 @@
 
 #  `Flutter` + `Phoenix` Demo
 
-A quick demo showcasing 
-the communication between
-a Flutter app
-and a Phoenix-based backend
-**through websockets**.
+A quick demo showing 
+communication between
+a **`Flutter`** app
+and **`Phoenix`** backend
+via **`WebSockets`**.
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/dwyl/flutter-phoenix-channels-demo/ci.yml?style=flat-square)
 [![HitCount](https://hits.dwyl.com/dwyl/flutter-phoenix-channels-demo.svg?style=flat-square&show=unique)](http://hits.dwyl.com/dwyl/flutter-phoenix-channels-demo)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/dwyl/flutter-phoenix-channels-demo/issues)
 
-
 </div>
+
+<br />
+
+- [`Flutter` + `Phoenix` Demo](#flutter--phoenix-demo)
+- [Why? 🤷‍](#why-)
+- [What? 💭](#what-)
+- [Who? 👤](#who-)
+- [_How_? 👩‍💻](#how-)
+  - [Prerequisites? 📝](#prerequisites-)
+  - [I want to run this project! 🏃‍♂️](#i-want-to-run-this-project-️)
+  - [0. Creating basic `Flutter` app](#0-creating-basic-flutter-app)
+    - [0.1 Creating new `Flutter` app](#01-creating-new-flutter-app)
+    - [0.2 Creating new `Phoenix` server](#02-creating-new-phoenix-server)
+  - [1. Creating a room in `Phoenix`](#1-creating-a-room-in-phoenix)
+  - [2. Setting up `Flutter` page](#2-setting-up-flutter-page)
+  - [3. Tracking people in `Phoenix` server](#3-tracking-people-in-phoenix-server)
+    - [3.1 Tracking people](#31-tracking-people)
+  - [4. Connect `Flutter` to `Phoenix`](#4-connect-flutter-to-phoenix)
+    - [4.1 `_connected_` and `_username` fields](#41-_connected_-and-_username-fields)
+    - [4.2 Connecting to `Phoenix` server when pressing the button](#42-connecting-to-phoenix-server-when-pressing-the-button)
+    - [4.3 Listing the users](#43-listing-the-users)
+  - [5. Run the app!](#5-run-the-app)
+  - [6. *Bonus points*: Adding splash screen](#6-bonus-points-adding-splash-screen)
+  - [6.1 Switching between the `html` and `canvaskit` web renderers](#61-switching-between-the-html-and-canvaskit-web-renderers)
+  - [6.2 Which web renderer should I choose?](#62-which-web-renderer-should-i-choose)
+- [Deployment 📦](#deployment-)
+- [Enhancing the `PWA`](#enhancing-the-pwa)
+- [Star the Project ⭐](#star-the-project-)
 
 
 <br />
@@ -22,9 +49,9 @@ and a Phoenix-based backend
 
 This SPIKE project is meant for *us*
 or anyone that is interested
-in connecting a Flutter application
-with a backend written in Elixir
-and Phoenix.
+in connecting a `Flutter` application
+with a backend written in `Elixir`
+and `Phoenix`.
 
 We want to evaluate the implementation
 details of how this process is
@@ -37,8 +64,8 @@ between the two parties.
 is an open-source framework created by Google 
 for creating multi-platform, 
 high-performance applications from a single codebase. 
-It makes it easier for you to build user interfaces 
-that works both on web and mobile devices.
+It makes it easier to build Apps
+that work on web and mobile devices.
 To learn more about `Flutter`,
 we recommend you checking
 [`dwyl/learn-flutter`](https://github.com/dwyl/learn-flutter)
@@ -48,22 +75,22 @@ is a web framework for the
 [`Elixir`](https://elixir-lang.org/)
 programming language, 
 perfect for soft-realtime communication 
-with external clients through websockets.
-To learn more about Phoenix and Elixir,
+with external clients through `WebSockets`.
+To learn more about `Phoenix` and `Elixir`,
 we suggest visiting
 [`dwyl/learn-phoenix-framework`](https://github.com/dwyl/learn-phoenix-framework)
 and
 [`dwyl/learn-elixir`](https://github.com/dwyl/learn-elixir).
 
-We will create a simple Flutter app
-that will connect to a Phoenix-based backend server
+We will create a simple `Flutter` app
+that will connect to a `Phoenix` backend server
 and check who is currently online.
 
 # Who? 👤
 
 This quick demo is aimed at people in the @dwyl team
 who need to understand how to communicate 
-between `Flutter` apps and `Phoenix`-based servers.
+between `Flutter` apps and `Phoenix` servers.
 
 # _How_? 👩‍💻
 
@@ -138,7 +165,7 @@ To create a new `Flutter` project
 with Visual Studio,
 please follow the instructions
 in 
-https://github.com/dwyl/learn-flutter#0-setting-up-a-new-project
+[dwyl/learn-flutter#0-setting-up-a-new-project](https://github.com/dwyl/learn-flutter#0-setting-up-a-new-project)
 (you only need to read the 
 **0. Setting up a new project** section).
 
@@ -156,7 +183,7 @@ On the other hand,
 if you want to run the app
 on a real device,
 check 
-https://github.com/dwyl/flutter-stopwatch-tutorial/tree/33907b1b01760dd49db85fa97fb84ce4562252ae#running-on-a-real-device
+[dwyl/flutter-stopwatch-tutorial#running-on-a-real-device](https://github.com/dwyl/flutter-stopwatch-tutorial/tree/33907b1b01760dd49db85fa97fb84ce4562252ae#running-on-a-real-device)
 to get started
 and read the **Running on a real device** section.
 
@@ -1020,7 +1047,8 @@ especially if you're looking for a good SEO rank.
 
 `Flutter Web`'s initial loading times 
 has been thoroughly discussed
-(e.g. https://github.com/flutter/flutter/issues/76009)
+e.g: 
+[flutter/issues/76009](https://github.com/flutter/flutter/issues/76009)
 amongst the Flutter community,
 as it can be considered *slow* in production
 when compared with other websites.
@@ -1042,7 +1070,7 @@ which is *not desirable*.
 However,
 we can **improve `Lighthouse` metrics**
 by adding a splash screen,
-letting the user know this initialization process
+letting the `person` know this initialization process
 is occurring,
 instead of just showing a blank screen.
 
@@ -1096,9 +1124,9 @@ Change it to the following.
         align-items: center;
         display: flex;
         flex-direction: column;
-        height: 100%;
+        height: 50%;
         justify-content: center;
-        width: 100%;
+        width: 50%;
       }
 
       #loading span {
@@ -1146,8 +1174,8 @@ Change it to the following.
         }
       }
     </style>
-    <img src="icons/Icon-512.png" alt="Loading indicator..." />
-    <span id="loading-text">asd</span>
+    <img src="icons/Icon-192.png" alt="Loading indicator..." />
+    <span id="loading-text">Let's go!</span>
   </div>
   <script>
     window.addEventListener('load', function(ev) {
@@ -1155,7 +1183,7 @@ Change it to the following.
       // Showing loading indicator
       var loading = document.querySelector('#loading');
       var loadingText = document.querySelector('#loading-text');
-      loadingText.textContent = "Loading entrypoint...";
+      loadingText.textContent = "Loading ...";
 
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -1163,7 +1191,7 @@ Change it to the following.
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: async function(engineInitializer) {
-          loadingText.textContent = "Initializing engine...";
+          loadingText.textContent = "Initializing engine ...";
           
           let appRunner = await engineInitializer.initializeEngine();
 
@@ -1177,20 +1205,21 @@ Change it to the following.
 ```
 
 We've added a simple `<div>` element
-with id `"loading`" 
-with a text inside.
+with `id="loading"` 
+with sample text inside.
 Inside this element we will show
 **an image** and a **text** that will change
 according to the different stage of the initialization process.
 
 If you run the web application again,
-you should see something like this.
+you should see something like this:
 
 ![final](https://user-images.githubusercontent.com/17494745/221218715-29e10501-0748-4ab0-9ea7-ce57eb6c5cec.gif)
 
 Looks a bit better, doesn't it?
 
-Let's see how the `Lighthouse` metrics are improved!
+Let's see how the `Lighthouse` metrics are improved:
+
 
 <img width="1206" alt="improved_lighthouse" src="https://user-images.githubusercontent.com/17494745/221225710-0ee26cb3-da6f-4dfd-93ac-bc3618dd7a46.png">
 
@@ -1223,15 +1252,15 @@ with **`html` on web devices**.
 
 We can do this programatically
 (just to make sure we're actually switching renderers)
-in the [`initializeEngine`](https://docs.flutter.dev/development/platform-integration/web/initialization) method
+in the 
+[`initializeEngine`](https://docs.flutter.dev/development/platform-integration/web/initialization) method
 by passing arguments.
 
-> **Note**
->
+> **Note**:
 > We don't need to do this programatically.
-> When we run `flutter build web --web-renderer html`, for example,
-> this setting is overriden for you 
-> **without** having to tinker with any code.
+> When we run `flutter build web --web-renderer html`
+> this setting is overridden for you 
+> **without** having to tinker with any code or settings.
 >
 > You can find more information if you run
 > `flutter build web --help`.
@@ -1359,7 +1388,7 @@ By default, any `Flutter` app
 has `PWA` capabilities built-in.
 It's our job, as developers,
 to *extend them* 
-and make the experience for our users **better**!
+and make the experience for our `people` **better**!
 
 We've created a guide with this in mind in
 [`./app/pwa.md`](./app/pwa.md)
@@ -1383,7 +1412,3 @@ don't hesistate
 and open an
 [issue](https://github.com/dwyl/flutter-phoenix-channels-demo/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)!
 We'll try our best to help you!
-
-
-
-
